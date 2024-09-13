@@ -120,5 +120,45 @@ class AdminController extends Controller
         $profileData = Admin::find($id);
         return view('admin.admin_profile', compact('profileData'));
     }
-    // End Methods
+    // End Method
+
+    public function AdminProfileStore(Request $request)
+    {
+        $id = Auth::guard('admin')->id();
+        $data = Admin::find($id);
+
+        $data->name = $request->name;
+        $data->email = $request->email;
+        $data->phone = $request->phone;
+        $data->address = $request->address;
+
+        $oldPhotopath = $data->photo;
+
+        if ($request->hasFile('photo')) {
+            $file = $request->file('photo');
+            $fileName = time() . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('upload/admin_images'), $fileName);
+            $data->photo = $fileName;
+
+            if ($oldPhotopath && $oldPhotopath !== $fileName) {
+                $this->deleteOldImage($oldPhotopath);
+            }
+        }
+        $data->save();
+        $notification = array(
+            'message' => 'Profile Updated Successfully!',
+            'alert-type' => 'success'
+        );
+        return redirect()->back()->with($notification);
+    }
+    // End Method
+
+    private function deleteOldImage(string $oldPhotopath): void
+    {
+        $fullPath = public_path('upload/admin_images/' . $oldPhotopath);
+        if (file_exists($fullPath)) {
+            unlink($fullPath);
+        }
+    }
+    // End Private Method
 }

@@ -29,7 +29,7 @@
                                         <div class="flex-shrink-0">
                                             <div class="avatar-xl me-3">
                                                 <img src="{{ !empty($profileData->photo) ? url('upload/admin_images/' . $profileData->photo) : url('upload/no_image.jpg') }}"
-                                                    alt="" class="img-fluid rounded-circle d-block">
+                                                    alt="" class="img-fluid rounded-circle w-100 h-100 object-fit-cover">
                                             </div>
                                         </div>
                                         <div class="flex-grow-1">
@@ -55,7 +55,8 @@
                         </div>
                     </div>
                     <div class="card-body p-4">
-                        <form action="">
+                        <form action="{{ route('admin.profile.store') }}" method="POST" enctype="multipart/form-data">
+                            @csrf
                             <div class="row">
                                 <div class="col-lg-6">
                                     <div>
@@ -91,7 +92,7 @@
                                         <div class="mb-3">
                                             <img id="showImage"
                                                 src="{{ !empty($profileData->photo) ? url('upload/admin_images/' . $profileData->photo) : url('upload/no_image.jpg') }}"
-                                                alt="" class="rounded-circle p-1 bg-primary" width="110">
+                                                alt="" class="rounded-circle p-1 bg-primary" width="100">
                                         </div>
                                         <div class="mt-4">
                                             <button type="submit"
